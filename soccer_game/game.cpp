@@ -83,10 +83,10 @@ simulate_game(Input* input, float dt) {
 
 
 
-	if (predictedball_y > player_pos_0) {
+	if (predictedball_y > player_pos_0+9) {
 		player_ddp_0 = 2000;
 	}
-	if (predictedball_y < player_pos_0) {
+	if (predictedball_y < player_pos_0-9) {
 		player_ddp_0 = -2000;
 	}
 
