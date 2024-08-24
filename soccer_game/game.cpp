@@ -4,11 +4,11 @@
 
 
 float player_pos_0 = 0.f;
-float player_pos_1 = 0.f;
+float player_pos_1 = -12.f;
 float player_p_1, player_dp_1, player_p_0, player_dp_0;
 float arena_half_size_x = 85, arena_half_size_y = 45;
 float player_half_size_x = 2.5, player_half_size_y = 12;
-float ball_x, ball_y, ball_dp_x = 100, ball_dp_y=0;
+float ball_x, ball_y, ball_dp_x = 100, ball_dp_y=21;
 
 int player_score_0 = 0;
 int player_score_1 = 0;
@@ -54,11 +54,44 @@ simulate_game(Input* input, float dt) {
 
 	float player_ddp_1 = 0.f;
 	float player_ddp_0 = 0.f;
-	if (is_down(BUTTON_UP))	player_ddp_1 += 2000;
-	if (is_down(BUTTON_DOWN))  player_ddp_1 -= 2000;
+	//if (is_down(BUTTON_UP))	player_ddp_1 += 2000;
+	//if (is_down(BUTTON_DOWN))  player_ddp_1 -= 2000;
+	
+	float rise_1 = 45 + ball_y + (80-ball_x)  * ball_dp_y / ball_dp_x;
+
+	while (rise_1 < 0 || rise_1>180) {
+		if (rise_1 < 0) {
+			rise_1 += 180;
+		}
+		else {
+			rise_1 -= 180;
+		}
+	}
+
+
+
+	if (rise_1 > 90) {
+		predictedball_y = 45 - (rise_1 - 90);
+	}
+	else {
+		predictedball_y = -45 + rise_1;
+	}
+
+
+
+	if (predictedball_y > player_pos_1 + 9) {
+		player_ddp_1 = 2000;
+	}
+	if (predictedball_y < player_pos_1 - 9) {
+		player_ddp_1 = -2000;
+	}
+	
+	
+
 	
 	
 	//if (is_down(BUTTON_W))	player_ddp_0 += 2000;
+	
 	//if (is_down(BUTTON_S))  player_ddp_0 -= 2000;
 	
 	float rise=45+ball_y+(ball_x+80)*-1.0*ball_dp_y / ball_dp_x;
@@ -102,13 +135,13 @@ simulate_game(Input* input, float dt) {
 		if (aabb_vs_aabb(ball_x, ball_y, 1, 1, 80, player_pos_1, player_half_size_x, player_half_size_y)) {
 			ball_x = 80 - player_half_size_x - 1;
 			ball_dp_x *= -1;
-			ball_dp_y = (ball_y - player_pos_1) * 2 + player_dp_1 * .74f;
+			ball_dp_y = (ball_y - player_pos_1) * 16 + player_dp_1 * .74f;
 		}
 		else if (aabb_vs_aabb(ball_x, ball_y, 1, 1, -80, player_pos_0, player_half_size_x, player_half_size_y)) {
 			ball_x = -80 + player_half_size_x + 1;
 			ball_dp_x *= -1;
 			ball_dp_x *= (1.0 + 1 / (0.03 * ball_dp_x));
-			ball_dp_y = (ball_y - player_pos_0) * 2 + player_dp_0 * .74f;
+			ball_dp_y = (ball_y - player_pos_0) * 16 + player_dp_0 * .74f;
 
 		}
 		if (ball_y + 1 > arena_half_size_y) {
