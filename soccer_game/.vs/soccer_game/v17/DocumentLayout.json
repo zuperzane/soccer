@@ -42,21 +42,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "soccer_game.vcxproj",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
-              "RelativeDocumentMoniker": "soccer_game.vcxproj",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
-              "RelativeToolTip": "soccer_game.vcxproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
-              "WhenOpened": "2024-08-25T09:24:33.744Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 5,
@@ -67,8 +54,7 @@
               "RelativeToolTip": "soccer_game.vcxproj.filters",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-08-25T09:24:32.342Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-25T09:24:32.342Z"
             },
             {
               "$type": "Document",
@@ -80,8 +66,7 @@
               "RelativeToolTip": "renderer.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T07:33:20.062Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T07:33:20.062Z"
             },
             {
               "$type": "Document",
@@ -91,10 +76,22 @@
               "RelativeDocumentMoniker": "game.cpp",
               "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\game.cpp",
               "RelativeToolTip": "game.cpp",
-              "ViewState": "AgIAAGwAAAAAl5mZmZkVwIkAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAACANDMzMzMvwCoAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-24T07:23:19.866Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "soccer_game.vcxproj",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
+              "RelativeDocumentMoniker": "soccer_game.vcxproj",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
+              "RelativeToolTip": "soccer_game.vcxproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2024-08-25T09:24:33.744Z"
             },
             {
               "$type": "Document",
@@ -104,7 +101,7 @@
               "RelativeDocumentMoniker": "win64_platform.cpp",
               "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\win64_platform.cpp",
               "RelativeToolTip": "win64_platform.cpp",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAiwIQAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAEkAAAAAZmZmZmYowIQAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-24T07:21:27.009Z",
               "EditorCaption": ""
@@ -119,8 +116,7 @@
               "RelativeToolTip": "soccer_game.vcxproj.user",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003464|",
-              "WhenOpened": "2024-08-24T21:47:36.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T21:47:36.475Z"
             },
             {
               "$type": "Document",
@@ -132,8 +128,7 @@
               "RelativeToolTip": "platform_unspecific.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T07:21:23.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T07:21:23.79Z"
             },
             {
               "$type": "Document",
@@ -145,8 +140,7 @@
               "RelativeToolTip": "utils.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T20:34:59.953Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T20:34:59.953Z"
             }
           ]
         }

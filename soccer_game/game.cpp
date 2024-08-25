@@ -33,7 +33,7 @@ Ball ball_6 = { -40.5, 21.5, bot_radius, 0, 0, 0, 0 };
 
 
 internal void simulate_player(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
-    ddp -= *dp * 10;
+    ddp -= *dp * 7;
     *p = *p + *dp * dt + ddp * dt * dt * 0.5f;
     *dp = *dp + ddp * dt;
 
@@ -52,6 +52,24 @@ internal void simulate_ball(Ball* ball, float dt, float arena_half_size_x, float
     simulate_player(&ball->x, &ball->dp_x, ball->ddp_x, dt, arena_half_size_x, ball->radius);
     simulate_player(&ball->y, &ball->dp_y, ball->ddp_y, dt, arena_half_size_y, ball->radius);
 }
+
+
+internal void simulate_player_s(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
+    ddp -= *dp * 0.5;
+    *p = *p + *dp * dt + ddp * dt * dt * 0.5f;
+    *dp = *dp + ddp * dt;
+
+    
+}
+
+internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, float arena_half_size_y) {
+    simulate_player_s(&ball->x, &ball->dp_x, ball->ddp_x, dt, arena_half_size_x, ball->radius);
+    simulate_player_s(&ball->y, &ball->dp_y, ball->ddp_y, dt, arena_half_size_y, ball->radius);
+}
+
+
+
+
 
     internal boolean aabb_vs_aabb(float p1x, float p1y, float hs1x, float hs1y, float p2x, float p2y, float hs2x, float hs2y) {
         return (p1x + hs1x > p2x - hs2x &&
@@ -90,12 +108,41 @@ internal void simulate_ball(Ball* ball, float dt, float arena_half_size_x, float
         *final_py = -0.8 * relative_dy_back + ball2->dp_y;
     }
 
-    void ball_hit_ball_check(Ball * big_ball, Ball * small_ball) {
+    internal void big_final_speed(Ball* ball1, Ball* ball2) {
+        float relative_dx = ball1->dp_x - ball2->dp_x;
+        float relative_dy = ball1->dp_y - ball2->dp_y;
+        float relative_x = ball1->x - ball2->x;
+        float relative_y = ball1->y - ball2->y;
+        
+        if (relative_dx * relative_x + relative_y * relative_dy > 0) {
+            return;
+        }
+
+        float vs_ss = (relative_dx * relative_x+relative_dy*relative_y)/((relative_x * relative_x + relative_y * relative_y));
+
+        float final_add_x=vs_ss*relative_x;
+        float final_add_y=vs_ss*relative_y;
+
+        ball1->dp_x = -1.1 * final_add_x + ball1->dp_x;
+        ball1->dp_y = -1.1 * final_add_y + ball1->dp_y;
+
+        ball2->dp_x = 1.1 * final_add_x + ball2->dp_x;
+        ball2->dp_y = 1.1 * final_add_y + ball2->dp_y;
+    }
+
+
+
+   internal void ball_hit_ball_check(Ball * big_ball, Ball * small_ball) {
         if (circle_vs_circle(big_ball, small_ball)) {
             final_speed(small_ball, big_ball, &small_ball->dp_x, &small_ball->dp_y);
         }
     }
 
+  internal void big_ball_hit_ball_check(Ball* big_ball, Ball* small_ball) {
+        if (circle_vs_circle(big_ball, small_ball)) {
+            big_final_speed(small_ball, big_ball);
+        }
+    }
 
 
 
@@ -138,21 +185,36 @@ internal void simulate_game(Input* input, float dt) {
 	
 
 
+    {
+        simulate_ball_s(&ball_1, dt, arena_half_size_x, arena_half_size_y);
+        simulate_ball(&ball_2, dt, arena_half_size_x, arena_half_size_y);
+        simulate_ball(&ball_3, dt, arena_half_size_x, arena_half_size_y);
+        simulate_ball(&ball_4, dt, arena_half_size_x, arena_half_size_y);
+        simulate_ball(&ball_5, dt, arena_half_size_x, arena_half_size_y);
+        ball_hit_ball_check(&ball_2, &ball_1);
+        ball_hit_ball_check(&ball_3, &ball_1);
+        ball_hit_ball_check(&ball_4, &ball_1);
+        ball_hit_ball_check(&ball_5, &ball_1);
+		big_ball_hit_ball_check(&ball_2, &ball_3);
+		big_ball_hit_ball_check(&ball_2, &ball_4);
+		big_ball_hit_ball_check(&ball_2, &ball_5);
+		big_ball_hit_ball_check(&ball_3, &ball_4);
+		big_ball_hit_ball_check(&ball_3, &ball_5);
+		big_ball_hit_ball_check(&ball_4, &ball_5);
+
+                
 
 
-	simulate_ball(&ball_2, dt, arena_half_size_x, arena_half_size_y);
-	simulate_ball(&ball_3, dt, arena_half_size_x, arena_half_size_y);
-	simulate_ball(&ball_4, dt, arena_half_size_x, arena_half_size_y);
-	simulate_ball(&ball_5, dt, arena_half_size_x, arena_half_size_y);
-    ball_hit_ball_check(&ball_2, &ball_1);
-    ball_hit_ball_check(&ball_3, &ball_1);
-    ball_hit_ball_check(&ball_4, &ball_1);
-	ball_hit_ball_check(&ball_5, &ball_1);
-	
+
+
+    }
     
 
     u32 color = 0x00ffff;
     u32 color_2 = 0xff0000;
+
+    draw_number(0x006000, -10, 38, 2, player_score_0);
+    draw_number(0x006000, 10, 38, 2, player_score_1);
 
     draw_circle(color, ball_2.x, ball_2.y, ball_2.radius);
 	draw_circle(color, ball_3.x, ball_3.y, ball_3.radius);
@@ -250,11 +312,8 @@ internal void simulate_game(Input* input, float dt) {
         }
     }
 
-		ball_1.x += ball_1.dp_x * dt;
-		ball_1.y += ball_1.dp_y * dt;
 		
-		draw_number(0x006000, -10, 20, 2, player_score_0);
-		draw_number(0x006000, 10, 20, 2, player_score_1);
+	
 
 		draw_circle(0xffffff, ball_1.x, ball_1.y, 1);
 		//draw_circle(0x0018090, 200, 300, 200);
