@@ -22,10 +22,10 @@ int predictedball_y = 0;
 float bot_radius = 6.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
-Ball ball_2 = { 3.5, 1.5, bot_radius, 0, 0, 0, 0 };
-Ball ball_3 = { -13.5, -21.5, bot_radius, 0, 0, 0, 0 };
-Ball ball_4 = { 23.5, 21.5, bot_radius, 0, 0, 0, 0 };
-Ball ball_5 = { 23.5, 42.5, bot_radius+5.0, 0, 0, 0, 0 };
+Ball ball_2 = { -40, 0, bot_radius, 0, 0, 0, 0 };
+Ball ball_3 = { -20, 0, bot_radius, 0, 0, 0, 0 };
+Ball ball_4 = { 40, 0, bot_radius, 0, 0, 0, 0 };
+Ball ball_5 = { 20, 0, bot_radius, 0, 0, 0, 0 };
 Ball ball_6 = { -40.5, 21.5, bot_radius, 0, 0, 0, 0 };
 
 
@@ -109,27 +109,56 @@ internal void simulate_game(Input* input, float dt) {
     float player_ddp_0 = 0.f;
 	ball_2.ddp_x = 0;
     ball_2.ddp_y = 0;
-    if (is_down(BUTTON_UP)) ball_2.ddp_y += 500.4;
-    if (is_down(BUTTON_DOWN)) ball_2.ddp_y -= 500.4;
-    if (is_down(BUTTON_RIGHT)) ball_2.ddp_x += 500.4;
-    if (is_down(BUTTON_LEFT)) ball_2.ddp_x -= 500.4;
+	ball_3.ddp_x = 0;
+	ball_3.ddp_y = 0;
+	ball_4.ddp_x = 0;
+	ball_4.ddp_y = 0;
+	ball_5.ddp_x = 0;
+	ball_5.ddp_y = 0;
+
+    //controls
+    {
+        if (is_down(BUTTON_UP)) ball_2.ddp_y += 500.4;
+        if (is_down(BUTTON_DOWN)) ball_2.ddp_y -= 500.4;
+        if (is_down(BUTTON_RIGHT)) ball_2.ddp_x += 500.4;
+        if (is_down(BUTTON_LEFT)) ball_2.ddp_x -= 500.4;
+        if (is_down(BUTTON_W)) ball_3.ddp_y += 500.4;
+        if (is_down(BUTTON_S)) ball_3.ddp_y -= 500.4;
+        if (is_down(BUTTON_D)) ball_3.ddp_x += 500.4;
+        if (is_down(BUTTON_A)) ball_3.ddp_x -= 500.4;
+        if (is_down(BUTTON_I)) ball_4.ddp_y += 500.4;
+        if (is_down(BUTTON_K)) ball_4.ddp_y -= 500.4;
+        if (is_down(BUTTON_L)) ball_4.ddp_x += 500.4;
+        if (is_down(BUTTON_J)) ball_4.ddp_x -= 500.4;
+        if (is_down(BUTTON_T)) ball_5.ddp_y += 500.4;
+        if (is_down(BUTTON_G)) ball_5.ddp_y -= 500.4;
+        if (is_down(BUTTON_H)) ball_5.ddp_x += 500.4;
+        if (is_down(BUTTON_F)) ball_5.ddp_x -= 500.4;
+    }
+	
+
+
+
 
 	simulate_ball(&ball_2, dt, arena_half_size_x, arena_half_size_y);
+	simulate_ball(&ball_3, dt, arena_half_size_x, arena_half_size_y);
+	simulate_ball(&ball_4, dt, arena_half_size_x, arena_half_size_y);
+	simulate_ball(&ball_5, dt, arena_half_size_x, arena_half_size_y);
     ball_hit_ball_check(&ball_2, &ball_1);
     ball_hit_ball_check(&ball_3, &ball_1);
     ball_hit_ball_check(&ball_4, &ball_1);
 	ball_hit_ball_check(&ball_5, &ball_1);
-	ball_hit_ball_check(&ball_6, &ball_1);
-
+	
     
 
     u32 color = 0x00ffff;
+    u32 color_2 = 0xff0000;
+
     draw_circle(color, ball_2.x, ball_2.y, ball_2.radius);
 	draw_circle(color, ball_3.x, ball_3.y, ball_3.radius);
-	draw_circle(color, ball_4.x, ball_4.y, ball_4.radius);
-	draw_circle(color, ball_5.x, ball_5.y, ball_5.radius);
-	draw_circle(color, ball_6.x, ball_6.y, ball_6.radius);
-
+	draw_circle(color_2, ball_4.x, ball_4.y, ball_4.radius);
+	draw_circle(color_2, ball_5.x, ball_5.y, ball_5.radius);
+	
     
     //ball prediction
     {
