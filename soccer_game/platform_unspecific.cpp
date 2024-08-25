@@ -7,6 +7,8 @@ struct Button_State {
 enum {
 	BUTTON_UP,
 	BUTTON_DOWN,
+	BUTTON_LEFT,
+	BUTTON_RIGHT,
 	BUTTON_S,
 	BUTTON_W,
 	BUTTON_COUNT,

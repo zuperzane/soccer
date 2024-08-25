@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "utils.cpp"
+#include <cmath>
 
 global_variable bool running = true;
 
@@ -119,6 +120,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR  lpCmdLine,  int
 					process_button(BUTTON_DOWN, VK_DOWN);
 					process_button(BUTTON_W, 'W');
 					process_button(BUTTON_S, 'S');
+					process_button(BUTTON_LEFT, VK_LEFT);
+					process_button(BUTTON_RIGHT, VK_RIGHT);
 
 				
 				

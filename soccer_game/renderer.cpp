@@ -49,7 +49,7 @@ void draw_rect_pixels(unsigned int color, int x0, int y0, int x1, int y1) {
 }
 
 internal
-void draw_circle(unsigned int color, int x0,int y0, int radius) {
+void draw_circle_pixels(unsigned int color, int x0,int y0, int radius) {
 
 	unsigned int* pixel = (unsigned int*)render_state.memory;
 	for (int y = y0-radius; y<=y0+radius && y < render_state.height&&y>=0; y++) {
@@ -63,6 +63,21 @@ void draw_circle(unsigned int color, int x0,int y0, int radius) {
 		}
 
 	}
+
+
+}
+
+internal void
+draw_circle(u32 color, float x, float y, float radius) {
+
+	x *= render_state.height * render_scale;
+	y *= render_state.height * render_scale;
+	radius *= render_state.height * render_scale;
+
+	x += render_state.width / 2.f;
+	y += render_state.height / 2.f;
+
+	draw_circle_pixels(color, x, y, radius);
 
 
 }
