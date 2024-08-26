@@ -13,7 +13,7 @@ typedef struct {
 } Ball;
 
 typedef struct {
-    Ball *balls[4]; // Adjust the size as needed
+    Ball *balls[6]; // Adjust the size as needed
     int team_id;
 } Team;
 
@@ -30,24 +30,28 @@ int predictedball_y = 0;
 float bot_radius = 3.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
-Ball ball_2 = { -40, 5, bot_radius, 0, 0, 0, 0,0 };
-Ball ball_3 = { -20, 12, bot_radius, 0, 0, 0, 0,0 };
-Ball ball_4 = { 42, -32, bot_radius, 0, 0, 0, 0,1 };
-Ball ball_5 = { 24, 35, bot_radius, 0, 0, 0, 0 ,1};
-Ball ball_6 = { -41, -33, bot_radius, 0, 0, 0, 0,0 };
-Ball ball_7 = { -27, 21, bot_radius, 0, 0, 0, 0,0 };
-Ball ball_8 = { 44, 44, bot_radius, 0, 0, 0, 0,1 };
-Ball ball_9 = { 21, 12, bot_radius, 0, 0, 0, 0 ,1 };
+Ball ball_2 = { 20, 20, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_3 = { -21, 28, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_4 = { -20, -30, bot_radius, 0, 0, 0, 0,1 };
+Ball ball_5 = { -61, 3, bot_radius, 0, 0, 0, 0 ,1};
+Ball ball_6 = { -20, 1, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_7 = { 21, 31, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_8 = { 20, -31, bot_radius, 0, 0, 0, 0,1 };
+Ball ball_9 = { 61, -2, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_1 = { -86, 16, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_2 = { -86, -16, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_3 = { 86, 16, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_4 = { 86, -16, bot_radius, 0, 0, 0, 0 ,1 };
 
 
 
-Team team1 = { {&ball_2, &ball_3, &ball_4, &ball_5}, 0 };
-Team team2 = { {&ball_6, &ball_7, &ball_8, &ball_9}, 1 };
+Team team1 = { {&ball_2, &ball_3, &ball_4, &ball_5,&post_3,&post_4}, 0 };
+Team team2 = { {&ball_6, &ball_7, &ball_8, &ball_9,&post_1,&post_2}, 1 };
 
 Ball* all_balls[] = { &ball_2, &ball_3, &ball_4, &ball_5, &ball_6, &ball_7, &ball_8, &ball_9 };
 
 //functions hitting stuff like that
-
+int size_of_team=4;
 
 internal void simulate_player(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
     ddp -= *dp * 7;
@@ -184,10 +188,32 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       return false;
   }
 
+  internal float how_too_close(Ball* ball_1, Ball* ball_2, Ball* opp) {
+      float slope = (ball_1->y - ball_2->y) / (ball_1->x - ball_2->x);
+      if (slope == 0.0) {
+          slope = 0.01;
+      }
+      float inversion = -1.0 / slope;
 
+      float x_intercept = (slope * ball_1->x - ball_1->y - inversion * opp->x + opp->y) / (slope - inversion);
+      float y_intercept = slope * (x_intercept - ball_1->x) + ball_1->y;
+      float distance_pass = sqrt((ball_1->x - x_intercept) * (ball_1->x - x_intercept) + (ball_1->y - y_intercept) * (ball_1->y - y_intercept));
+      float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept));
+      if (distance_intercept < 0.5 * distance_pass) {
+          if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x)) {
+              return 1.0;
+          }
+          return -1.0*sqrt( 0.5 * distance_pass-distance_intercept);
+      }
+      return 1.0;
+  }
+
+
+
+  internal 
   void check_connections(Team* team1, Team* team2) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             bool can_pass_1_to_2 = true;
             bool can_pass_2_to_1 = true;
 
@@ -221,11 +247,14 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
     }
 }
 
+
+
+
+
 internal void simulate_game(Input* input, float dt) {
     clear_screen(0x000000);
     draw_rect(0x009000, 0, 0, 85, 45);
-    draw_rect(0x909000, -90, 0, 5, 17);
-    draw_rect(0x909000, 90, 0, 5, 17);
+
 
     float player_ddp_1 = 0.f;
     float player_ddp_0 = 0.f;
@@ -268,17 +297,93 @@ internal void simulate_game(Input* input, float dt) {
     }
 	
 
+    
+   
+
+
+
+    draw_number(0x006000, -10, 38, 2, player_score_0);
+    draw_number(0x006000, 10, 38, 2, player_score_1);
+
+    u32 color = 0x00ffff;
+    u32 color_2 = 0xff0000;
+    
+    
+ 
+    
+    for (int i = 0; i < size_of_team; i++) {
+ 
+        float curr_array[5] = { 0.0f };
+        float up_array[5] = { 0.0f };
+        float right_array[5] = { 0.0f };
+
+        for (int j = 0; j < size_of_team + 1; j++) {
+            
+            for (int k = 0; k < size_of_team; k++) {
+                if (i == j) {
+    
+
+                }
+                else {
+
+                    curr_array[j] = min(how_too_close(team2.balls[i], team2.balls[j],team1.balls[k]), curr_array[j]);
+                    team2.balls[i]->x += 1.0;
+                    right_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
+                    team2.balls[i]->x -= 1.0;
+                    team2.balls[i]->y += 1.0;
+                    up_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
+                    team2.balls[i]->y -= 1.0;
+
+
+                }
+            }
+
+                        
+
+        
+        }
+
+
+        float curr_sum = 0.0;
+        for(int z = 0; z < size_of_team + 1; z++) {
+            curr_sum += curr_array[z];
+        
+        }
+
+        float right_sum = 0.0;
+        for(int z = 0; z < size_of_team + 1; z++) {
+            right_sum += right_array[z];
+
+        }
+
+        float up_sum = 0.0;
+        for(int z = 0; z < size_of_team + 1; z++) {
+            up_sum += up_array[z];
+
+        }
+
+
+        float right = right_sum - curr_sum;
+        float up = up_sum - curr_sum;
+        float hypotenuse=sqrt((right)*(right)+(up)*(up));
+        if (hypotenuse == 0.0) {
+            hypotenuse == 21.0;
+        }
+        team2.balls[i]->ddp_x += right * 30.0/hypotenuse;
+        team2.balls[i]->ddp_y += up * 30.0 / hypotenuse;
+    }
+
 
     {
-        
+
         for (int i = 0; i < 8; ++i) {
             simulate_ball(all_balls[i], dt, arena_half_size_x, arena_half_size_y);
             ball_hit_ball_check(all_balls[i], &ball_1);
 
         }
-       
+
         simulate_ball_s(&ball_1, dt, arena_half_size_x, arena_half_size_y);
-                
+
 
         for (int i = 0; i < 8; ++i) {
             for (int j = i + 1; j < 8; ++j) {
@@ -288,18 +393,7 @@ internal void simulate_game(Input* input, float dt) {
 
 
     }
-    
 
-
-    draw_number(0x006000, -10, 38, 2, player_score_0);
-    draw_number(0x006000, 10, 38, 2, player_score_1);
-
-    u32 color = 0x00ffff;
-    u32 color_2 = 0xff0000;
-
-    
-
-  
     for (int i = 0; i < sizeof(all_balls) / sizeof(all_balls[0]); ++i) {
         u32 current_color = (i < sizeof(all_balls) / sizeof(all_balls[0]) / 2) ? color : color_2;
         draw_circle(current_color, all_balls[i]->x, all_balls[i]->y, all_balls[i]->radius);
@@ -399,6 +493,8 @@ internal void simulate_game(Input* input, float dt) {
     check_connections(&team1, &team2);
     check_connections(&team2, &team1);
 
+    draw_rect(0x909000, -90, 0, 5, 17);
+    draw_rect(0x909000, 90, 0, 5, 17);
     draw_circle(0xffffff, ball_1.x, ball_1.y, 1);
 
 		//draw_circle(0x0018090, 200, 300, 200);
