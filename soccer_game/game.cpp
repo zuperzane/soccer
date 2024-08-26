@@ -178,8 +178,8 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       float x_intercept = (slope * ball_1->x - ball_1->y - inversion * opp->x + opp->y) / (slope - inversion);
       float y_intercept = slope * (x_intercept - ball_1->x) + ball_1->y;
       float distance_pass = sqrt((ball_1->x - x_intercept) * (ball_1->x - x_intercept) + (ball_1->y - y_intercept) * (ball_1->y - y_intercept));
-      float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept));
-      if (distance_intercept < 0.5 * distance_pass) {
+      float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept))-3.0;
+      if (distance_intercept < 0.2 * distance_pass) {
           if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x)) {
               return false;
           }
@@ -199,13 +199,20 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       float y_intercept = slope * (x_intercept - ball_1->x) + ball_1->y;
       float distance_pass = sqrt((ball_1->x - x_intercept) * (ball_1->x - x_intercept) + (ball_1->y - y_intercept) * (ball_1->y - y_intercept));
       float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept));
-      if (distance_intercept < 0.5 * distance_pass) {
+      if (distance_pass < 15.0) {
+      
+          return -100000000000.0;
+      
+      }
+      
+      
+      if (distance_intercept < 0.2 * distance_pass) {
           if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x)) {
               return 1.0;
           }
-          return -1.0*sqrt( 0.5 * distance_pass-distance_intercept);
+          return -51.0*sqrt(sqrt( 0.2 * distance_pass-distance_intercept))/sqrt(distance_pass);
       }
-      return 1.0;
+      return 7.0;
   }
 
 
@@ -213,7 +220,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
   internal 
   void check_connections(Team* team1, Team* team2) {
     for (int i = 0; i < 6; ++i) {
-        for (int j = 0; j < 6; ++j) {
+        for (int j = i+1; j < 6; ++j) {
             bool can_pass_1_to_2 = true;
             bool can_pass_2_to_1 = true;
 
@@ -327,12 +334,12 @@ internal void simulate_game(Input* input, float dt) {
                 else {
 
                     curr_array[j] = min(how_too_close(team2.balls[i], team2.balls[j],team1.balls[k]), curr_array[j]);
-                    team2.balls[i]->x += 1.0;
+                    team2.balls[i]->x += 2.0;
                     right_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
-                    team2.balls[i]->x -= 1.0;
-                    team2.balls[i]->y += 1.0;
-                    up_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
-                    team2.balls[i]->y -= 1.0;
+                    team2.balls[i]->x -= 2.0;
+                    team2.balls[i]->y += 2.0;
+                    up_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), up_array[j]);
+                    team2.balls[i]->y -= 2.0;
 
 
                 }
@@ -366,11 +373,11 @@ internal void simulate_game(Input* input, float dt) {
         float right = right_sum - curr_sum;
         float up = up_sum - curr_sum;
         float hypotenuse=sqrt((right)*(right)+(up)*(up));
-        if (hypotenuse == 0.0) {
-            hypotenuse == 21.0;
+        if (hypotenuse < 0.00001) {
+            hypotenuse = 21.0;
         }
-        team2.balls[i]->ddp_x += right * 30.0/hypotenuse;
-        team2.balls[i]->ddp_y += up * 30.0 / hypotenuse;
+        team2.balls[i]->ddp_x += right * 140.0/hypotenuse;
+        team2.balls[i]->ddp_y += up * 140.0 / hypotenuse;
     }
 
 
@@ -490,7 +497,7 @@ internal void simulate_game(Input* input, float dt) {
     }
 
 
-    check_connections(&team1, &team2);
+   // check_connections(&team1, &team2);
     check_connections(&team2, &team1);
 
     draw_rect(0x909000, -90, 0, 5, 17);
