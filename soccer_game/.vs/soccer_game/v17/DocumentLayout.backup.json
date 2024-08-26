@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "win64_platform.cpp",
               "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\win64_platform.cpp",
               "RelativeToolTip": "win64_platform.cpp",
-              "ViewState": "AgIAAGUAAABAZ2ZmZmYUwEAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGUAAABAZ2ZmZmYUwGwAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-24T07:21:27.009Z",
               "EditorCaption": ""
@@ -78,7 +78,7 @@
               "RelativeDocumentMoniker": "game.cpp",
               "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\game.cpp",
               "RelativeToolTip": "game.cpp",
-              "ViewState": "AgIAAHAAAAAkJjMzMzMbwLIAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAL0AAAAAdGZmZmYUwM4AAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-24T07:23:19.866Z",
               "EditorCaption": ""
@@ -105,8 +105,7 @@
               "RelativeToolTip": "utils.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T20:34:59.953Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T20:34:59.953Z"
             },
             {
               "$type": "Document",
@@ -142,8 +141,7 @@
               "RelativeToolTip": "platform_unspecific.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T07:21:23.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T07:21:23.79Z"
             }
           ]
         }
