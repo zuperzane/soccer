@@ -1,13 +1,21 @@
 #define is_down(b) input->buttons[b].is_down
 #define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
 #define released(b) (!input->buttons[b].is_down && input->buttons[b].changed)
+#include <cmath>
+using namespace std;
 
 typedef struct {
     float x, y;
     float radius;
     float dp_x, dp_y;
     float ddp_x, ddp_y;
+    int team;
 } Ball;
+
+typedef struct {
+    Ball *balls[2]; // Adjust the size as needed
+    int team_id;
+} Team;
 
 float player_pos_0 = 0.f;
 float player_pos_1 = -12.f;
@@ -19,14 +27,16 @@ int player_score_0 = 0;
 int player_score_1 = 0;
 int predictedball_y = 0;
 
-float bot_radius = 6.0f;
+float bot_radius = 3.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
-Ball ball_2 = { -40, 0, bot_radius, 0, 0, 0, 0 };
-Ball ball_3 = { -20, 0, bot_radius, 0, 0, 0, 0 };
-Ball ball_4 = { 40, 0, bot_radius, 0, 0, 0, 0 };
-Ball ball_5 = { 20, 0, bot_radius, 0, 0, 0, 0 };
-Ball ball_6 = { -40.5, 21.5, bot_radius, 0, 0, 0, 0 };
+Ball ball_2 = { -40, 5, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_3 = { -20, -6, bot_radius, 0, 0, 0, 0,0 };
+Ball ball_4 = { 40, 5, bot_radius, 0, 0, 0, 0,1 };
+Ball ball_5 = { 20, 6, bot_radius, 0, 0, 0, 0 ,1};
+
+Team team1 = { {&ball_2, &ball_3}, 1};
+Team team2 = { {&ball_4, &ball_5}, 2};
 
 
 //functions hitting stuff like that
@@ -54,8 +64,34 @@ internal void simulate_ball(Ball* ball, float dt, float arena_half_size_x, float
 }
 
 
+internal boolean is_too_close(Ball ball_1, Ball ball_2, Ball opp){
+
+	float slope = (ball_1.y - ball_2.y) / (ball_1.x - ball_2.x);
+    if (slope == 0.0) {
+        slope = 0.01;
+    }
+    float inversion = -1.0 / slope;
+
+    float x_intercept = (slope * ball_1.x - ball_1.y - inversion * opp.x + opp.y) / (slope - inversion);
+    float y_intercept = slope * (x_intercept - ball_1.x) + ball_1.y;
+	float distance_pass = sqrt((ball_1.x - x_intercept) * (ball_1.x - x_intercept) + (ball_1.y - y_intercept) * (ball_1.y - y_intercept));
+	float distance_intercept = sqrt((opp.x - x_intercept) * (opp.x - x_intercept) + (opp.y - y_intercept) * (opp.y - y_intercept));
+	if ( distance_intercept<0.5*distance_pass) {
+        if ((x_intercept<ball_1.x&& x_intercept < ball_2.x)||(x_intercept > ball_1.x && x_intercept > ball_2.x)) {
+            return false;
+        }
+        
+        return true;
+	}
+
+
+
+
+    return false;
+}
+
 internal void simulate_player_s(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
-    ddp -= *dp * 0.5;
+    ddp -= *dp * 0.9;
     *p = *p + *dp * dt + ddp * dt * dt * 0.5f;
     *dp = *dp + ddp * dt;
 
@@ -66,10 +102,6 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
     simulate_player_s(&ball->x, &ball->dp_x, ball->ddp_x, dt, arena_half_size_x, ball->radius);
     simulate_player_s(&ball->y, &ball->dp_y, ball->ddp_y, dt, arena_half_size_y, ball->radius);
 }
-
-
-
-
 
     internal boolean aabb_vs_aabb(float p1x, float p1y, float hs1x, float hs1y, float p2x, float p2y, float hs2x, float hs2y) {
         return (p1x + hs1x > p2x - hs2x &&
@@ -144,7 +176,13 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
         }
     }
 
-
+  internal void ball_connect(Ball ball_1, Ball ball_2, u32 color) {
+  
+  
+  
+      draw_rotate_rect(color, (ball_1.x+ball_2.x)/2.0, (ball_1.y+ball_2.y)/2.0, 0.5, sqrt((ball_1.x - ball_2.x) * (ball_1.x - ball_2.x) + (ball_1.y - ball_2.y) * (ball_1.y - ball_2.y)) / 2.0, -atan((ball_1.x - ball_2.x) / (ball_1.y - ball_2.y)));
+  
+  };
 
 internal void simulate_game(Input* input, float dt) {
     clear_screen(0x000000);
@@ -212,6 +250,8 @@ internal void simulate_game(Input* input, float dt) {
 
     u32 color = 0x00ffff;
     u32 color_2 = 0xff0000;
+
+    
 
     draw_number(0x006000, -10, 38, 2, player_score_0);
     draw_number(0x006000, 10, 38, 2, player_score_1);
@@ -312,10 +352,22 @@ internal void simulate_game(Input* input, float dt) {
         }
     }
 
-		
-	
 
-		draw_circle(0xffffff, ball_1.x, ball_1.y, 1);
+	u32 color_check_1 = 0x00ff00;
+    if (is_too_close(ball_2, ball_3, ball_4)) {
+		color_check_1 = 0x008000;
+    }
+	u32 color_check_2 = 0x00ff00;
+	if (is_too_close(ball_2, ball_3, ball_5)) {
+		color_check_2 = 0x008000;
+	}
+
+    ball_connect(ball_3,ball_2,color_check_1);
+    
+    
+    ball_connect(ball_4, ball_5, 0x00f000);
+
+    draw_circle(0xffffff, ball_1.x, ball_1.y, 1);
 		//draw_circle(0x0018090, 200, 300, 200);
 		
 
