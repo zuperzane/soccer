@@ -28,6 +28,8 @@ int player_score_1 = 0;
 int predictedball_y = 0;
 
 float bot_radius = 3.0f;
+float check_radius = 8.0f;
+
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
 Ball ball_2 = { 20, 20, bot_radius, 0, 0, 0, 0,1 };
@@ -52,6 +54,11 @@ Ball* all_balls[] = { &ball_2, &ball_3, &ball_4, &ball_5, &ball_6, &ball_7, &bal
 bool catch_ball_1 = false;
 //functions hitting stuff like that
 int size_of_team=4;
+int who_has_ball = -1;
+
+
+
+
 
 internal void simulate_player(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
     ddp -= *dp * 7;
@@ -252,8 +259,10 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
   internal void add_orbit_force(Ball* big_ball, Ball* small_ball, float orbit_radius, float radians) {
       // Calculate the desired position on the orbit
-      float target_x = big_ball->x + orbit_radius * cos(radians);
-      float target_y = big_ball->y + orbit_radius * sin(radians);
+
+	  float radians_2 = atan2(big_ball->dp_y, big_ball->dp_x);
+      float target_x = big_ball->x + orbit_radius * cos(radians_2);
+      float target_y = big_ball->y + orbit_radius * sin(radians_2);
 
       // Calculate the difference between the current position and the target position
       float diff_x = target_x - small_ball->x;
@@ -328,7 +337,204 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
+  internal void attack_team(Team* team2, Team* team1) {
+      for (int i = 0; i < size_of_team; i++) {
+          float curr_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float up_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float right_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float down_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float left_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
 
+          curr_array[i] = 0.0;
+          up_array[i] = 0.0;
+          right_array[i] = 0.0;
+          left_array[i] = 0.0;
+          down_array[i] = 0.0;
+
+          for (int j = 0; j < size_of_team + 2; j++) {
+              for (int k = 0; k < size_of_team; k++) {
+                  if (i != j) {
+                      curr_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), curr_array[j]);
+                      team2->balls[i]->x += check_radius;
+                      right_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), right_array[j]);
+                      team2->balls[i]->x -= check_radius;
+                      team2->balls[i]->y += check_radius;
+                      up_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), up_array[j]);
+                      team2->balls[i]->y -= check_radius;
+                      team2->balls[i]->x -= check_radius;
+                      left_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), left_array[j]);
+                      team2->balls[i]->x += check_radius;
+                      team2->balls[i]->y -= check_radius;
+                      down_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), down_array[j]);
+                      team2->balls[i]->y += check_radius;
+                  }
+              }
+          }
+
+          float curr_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              curr_sum += curr_array[z];
+          }
+
+          float right_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              right_sum += right_array[z];
+          }
+
+          float up_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              up_sum += up_array[z];
+          }
+
+          float left_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              left_sum += left_array[z];
+          }
+
+          float down_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              down_sum += down_array[z];
+          }
+
+          if (up_sum < 0 || down_sum < 0 || curr_sum < 0 || right_sum < 0 || left_sum < 0) {
+              int q = 0;
+          }
+
+          float right;
+          float up;
+
+          if (team2->balls[i]->y < 45 - check_radius && team2->balls[i]->y > -45 + check_radius) {
+              up = up_sum - down_sum;
+          }
+          else if (team2->balls[i]->y > 85 - check_radius) {
+              up = curr_sum - down_sum;
+          }
+          else {
+              up = up_sum - curr_sum;
+          }
+
+          if (team2->balls[i]->x < 85 - check_radius && team2->balls[i]->x > -85 + check_radius) {
+              right = right_sum - left_sum;
+          }
+          else if (team2->balls[i]->x > 85 - check_radius) {
+              right = curr_sum - left_sum;
+          }
+          else {
+              right = right_sum - curr_sum;
+          }
+
+          float hypotenuse = sqrt((right) * (right)+(up) * (up));
+          if (hypotenuse >= 0.001) {
+              if (!(curr_sum > right_sum && curr_sum > left_sum)) {
+                  team2->balls[i]->ddp_x += right * 300.0 / hypotenuse;
+              }
+              if (!(curr_sum > up_sum && curr_sum > down_sum)) {
+                  team2->balls[i]->ddp_y += up * 300.0 / hypotenuse;
+              }
+          }
+      }
+  }
+
+  /*
+  internal void defend_team(Team* team2, Team* team1) {
+      
+      for (int k = 0; k < size_of_team; k++) {
+      for (int i = 0; i < size_of_team; i++) {
+          float curr_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float up_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float right_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float down_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+          float left_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
+
+          curr_array[i] = 0.0;
+          up_array[i] = 0.0;
+          right_array[i] = 0.0;
+          left_array[i] = 0.0;
+          down_array[i] = 0.0;
+
+          for (int j = 0; j < size_of_team + 2; j++) {
+                  if (i != j) {
+                      curr_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), curr_array[j]);
+                      team1->balls[k]->x += check_radius;
+                      right_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), right_array[j]);
+                      team1->balls[k]->x -= check_radius;
+                      team1->balls[k]->y += check_radius;
+                      up_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), up_array[j]);
+                      team1->balls[k]->y -= check_radius;
+                      team1->balls[k]->x -= check_radius;
+                      left_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), left_array[j]);
+                      team1->balls[k]->x += check_radius;
+                      team1->balls[k]->y -= check_radius;
+                      down_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), down_array[j]);
+                      team1->balls[k]->y += check_radius;
+                  }
+              }
+          }
+
+          float curr_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              curr_sum += curr_array[z];
+          }
+
+          float right_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              right_sum += right_array[z];
+          }
+
+          float up_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              up_sum += up_array[z];
+          }
+
+          float left_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              left_sum += left_array[z];
+          }
+
+          float down_sum = 0.0;
+          for (int z = 0; z < size_of_team + 2; z++) {
+              down_sum += down_array[z];
+          }
+
+          if (up_sum < 0 || down_sum < 0 || curr_sum < 0 || right_sum < 0 || left_sum < 0) {
+              int q = 0;
+          }
+
+          float right;
+          float up;
+
+          if (team1->balls[k]->y < 45 - check_radius && team1->balls[k]->y > -45 + check_radius) {
+              up = up_sum - down_sum;
+          }
+          else if (team1->balls[k]->y > 85 - check_radius) {
+              up = curr_sum - down_sum;
+          }
+          else {
+              up = up_sum - curr_sum;
+          }
+
+          if (team1->balls[k]->x < 85 - check_radius && team1->balls[k]->x > -85 + check_radius) {
+              right = right_sum - left_sum;
+          }
+          else if (team1->balls[k]->x > 85 - check_radius) {
+              right = curr_sum - left_sum;
+          }
+          else {
+              right = right_sum - curr_sum;
+          }
+
+          float hypotenuse = sqrt((right) * (right)+(up) * (up));
+          if (hypotenuse >= 0.001) {
+              if (!(curr_sum > right_sum && curr_sum > left_sum)) {
+                  team1->balls[k]->ddp_x += right * 300.0 / hypotenuse;
+              }
+              if (!(curr_sum > up_sum && curr_sum > down_sum)) {
+                  team1->balls[k]->ddp_y += up * 300.0 / hypotenuse;
+              }
+          }
+      }
+  }
+  */
 
 internal void simulate_game(Input* input, float dt) {
     clear_screen(0x000000);
@@ -391,146 +597,17 @@ internal void simulate_game(Input* input, float dt) {
     u32 color_2 = 0xff0000;
     
     
- 
+	attack_team(&team2, &team1);
     
-    for (int i = 0; i < size_of_team; i++) {
- 
-        float curr_array[6] = { PI/2.0,PI/2.0,PI/2.0,PI/2.0,PI/2.0,PI / 2.0 };
-        float up_array[6] = { PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0 ,PI / 2.0 };
-        float right_array[6] = { PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0 };
-        float down_array[6] = { PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0 ,PI / 2.0 };
-        float left_array[6] = { PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0,PI / 2.0 ,PI / 2.0 };
+//    attack_team(&team1, &team2);
 
-        curr_array[i] = 0.0;
-        up_array[i] = 0.0;
-        right_array[i] = 0.0;
-        left_array[i] = 0.0;
-        down_array[i] = 0.0;
-
-        for (int j = 0; j < size_of_team + 2; j++) {
-            
-            for (int k = 0; k < size_of_team; k++) {
-                if (i == j) {
     
-
-                }
-                else {
-                    
-                    
-                    curr_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), curr_array[j]);
-                    team2.balls[i]->x += 1.0;
-                    right_array[j] =  min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
-                    team2.balls[i]->x -= 1.0;
-                    team2.balls[i]->y += 1.0;
-                    up_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), up_array[j]);
-                    team2.balls[i]->y -= 1.0;
-					team2.balls[i]->x -= 1.0;
-					left_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), left_array[j]);
-					team2.balls[i]->x += 1.0;
-					team2.balls[i]->y -= 1.0;
-					down_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), down_array[j]);
-					team2.balls[i]->y += 1.0;
-
-
-                }
-            }
-
-                        
-
-        
-        }
-
-
-        float curr_sum = 0.0;
-        for(int z = 0; z < size_of_team + 2; z++) {
-            curr_sum += curr_array[z];
-        
-        }
-
-        float right_sum = 0.0;
-        for(int z = 0; z < size_of_team + 2; z++) {
-            right_sum += right_array[z];
-
-        }
-
-
-        float up_sum = 0.0;
-        for(int z = 0; z < size_of_team + 2; z++) {
-            up_sum += up_array[z];
-
-        }
-		float left_sum = 0.0;
-        for (int z = 0; z < size_of_team + 2; z++) {
-            left_sum += left_array[z];
-        }
-
-		float down_sum = 0.0;
-		for (int z = 0; z < size_of_team + 2; z++) {
-			down_sum += down_array[z];
-		}
-
-        if (up_sum < 0 || down_sum < 0 || curr_sum < 0 || right_sum < 0 || left_sum < 0) {
-        
-            int q = 0;
-        }
-        
-
-        float right;
-        float up;
-        
-
-        if (team2.balls[i]->y < 44&& team2.balls[i]->y > -44) {
-           up = up_sum - down_sum;
-
-        }
-        else if (team2.balls[i]->y > 84) {
-			up = curr_sum - down_sum;
-		}
-		else {
-			up = up_sum - curr_sum;
-        }
-        if (team2.balls[i]->x < 84 && team2.balls[i]->y > -84) {
-			right = right_sum - left_sum;
-		}
-		else if (team2.balls[i]->x > 84) {
-			right = curr_sum - left_sum;
-        
-		}
-		else {
-			right = right_sum - curr_sum;
-		}
-        
-
-        float hypotenuse=sqrt((right)*(right)+(up)*(up));
-        if (hypotenuse<0.001) {
-        
-        }
-        else {
-
-            if (curr_sum > right_sum&&curr_sum>left_sum) {
-            }
-            else {
-                team2.balls[i]->ddp_x += right * 300.0 / hypotenuse;
-            }
-			if (curr_sum > up_sum && curr_sum > down_sum) {
-			}
-			else {
-				team2.balls[i]->ddp_y += up * 300.0 / hypotenuse;
-			}
-        }
-    }
-
-
     {
-
         for (int i = 0; i < 8; ++i) {
             simulate_ball(all_balls[i], dt, arena_half_size_x, arena_half_size_y);
             ball_hit_ball_check(all_balls[i], &ball_1);
 
         }
-
-        
-
 
         for (int i = 0; i < 8; ++i) {
             for (int j = i + 1; j < 8; ++j) {
@@ -538,13 +615,12 @@ internal void simulate_game(Input* input, float dt) {
             }
         }
 
-
         if (circle_vs_circle_hold(&ball_1, &ball_2)) {
-           
-            if (catch_ball_1==false) {
-				catch_ball(&ball_1, &ball_2, atan2((ball_1.x - ball_2.x) , (ball_1.y - ball_2.y)));
-				catch_ball_1 = true;
-            
+
+            if (catch_ball_1 == false) {
+                catch_ball(&ball_1, &ball_2, atan2((ball_1.x - ball_2.x), (ball_1.y - ball_2.y)));
+                catch_ball_1 = true;
+
             }
             else {
                 add_orbit_force(&ball_2, &ball_1, 4.5, 0.2);
@@ -652,7 +728,7 @@ internal void simulate_game(Input* input, float dt) {
    
 
 
-   // check_connections(&team1, &team2);
+   //check_connections(&team1, &team2);
     check_connections(&team2, &team1);
 
     draw_rect(0x909000, -90, 0, 5, 17);
