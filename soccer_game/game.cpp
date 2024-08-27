@@ -473,9 +473,34 @@ internal void simulate_game(Input* input, float dt) {
         
             int q = 0;
         }
+        
 
-        float right = right_sum - left_sum;
-        float up = up_sum - down_sum;
+        float right;
+        float up;
+        
+
+        if (team2.balls[i]->y < 44&& team2.balls[i]->y > -44) {
+           up = up_sum - down_sum;
+
+        }
+        else if (team2.balls[i]->y > 84) {
+			up = curr_sum - down_sum;
+		}
+		else {
+			up = up_sum - curr_sum;
+        }
+        if (team2.balls[i]->x < 84 && team2.balls[i]->y > -84) {
+			right = right_sum - left_sum;
+		}
+		else if (team2.balls[i]->x > 84) {
+			right = curr_sum - left_sum;
+        
+		}
+		else {
+			right = right_sum - curr_sum;
+		}
+        
+
         float hypotenuse=sqrt((right)*(right)+(up)*(up));
         if (hypotenuse<0.001) {
         
