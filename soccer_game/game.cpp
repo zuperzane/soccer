@@ -210,7 +210,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
           if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x)) {
               return 1.0;
           }
-          return -51.0*sqrt(sqrt( 0.2 * distance_pass-distance_intercept))/sqrt(distance_pass);
+          return -1.0*sqrt(  51.0 * sqrt(sqrt(0.2 * distance_pass - distance_intercept)) / sqrt(distance_pass));
       }
       return 7.0;
   }
@@ -324,6 +324,18 @@ internal void simulate_game(Input* input, float dt) {
         float up_array[5] = { 0.0f };
         float right_array[5] = { 0.0f };
 
+        float right_d = 1.0;
+        if (team2.balls[i]->x > 80) {
+
+
+            right_d = -1.0;
+        }
+        float up_d = 1.0;
+        if (team2.balls[i]->y > 40) {
+            up_d = -1.0;
+        }
+
+
         for (int j = 0; j < size_of_team + 1; j++) {
             
             for (int k = 0; k < size_of_team; k++) {
@@ -332,14 +344,15 @@ internal void simulate_game(Input* input, float dt) {
 
                 }
                 else {
-
+                    
+                    
                     curr_array[j] = min(how_too_close(team2.balls[i], team2.balls[j],team1.balls[k]), curr_array[j]);
-                    team2.balls[i]->x += 2.0;
+                    team2.balls[i]->x += right_d*4.0;
                     right_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), right_array[j]);
-                    team2.balls[i]->x -= 2.0;
-                    team2.balls[i]->y += 2.0;
+                    team2.balls[i]->x -= right_d*4.0;
+                    team2.balls[i]->y += up_d*4.0;
                     up_array[j] = min(how_too_close(team2.balls[i], team2.balls[j], team1.balls[k]), up_array[j]);
-                    team2.balls[i]->y -= 2.0;
+                    team2.balls[i]->y -= up_d*4.0;
 
 
                 }
@@ -376,8 +389,8 @@ internal void simulate_game(Input* input, float dt) {
         if (hypotenuse < 0.00001) {
             hypotenuse = 21.0;
         }
-        team2.balls[i]->ddp_x += right * 140.0/hypotenuse;
-        team2.balls[i]->ddp_y += up * 140.0 / hypotenuse;
+        team2.balls[i]->ddp_x += right_d*right * 140.0/hypotenuse;
+        team2.balls[i]->ddp_y += up_d*up * 140.0 / hypotenuse;
     }
 
 
