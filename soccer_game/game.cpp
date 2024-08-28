@@ -29,7 +29,7 @@ int predictedball_y = 0;
 
 float bot_radius = 3.0f;
 float check_radius = 8.0f;
-float check_radius_2 = 15.0f;
+float check_radius_2 = 10.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
 Ball ball_2 = { 20, 20, bot_radius, 0, 0, 0, 0,1 };
@@ -264,7 +264,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
       float distance_ball_1_ball_2 = sqrt((ball_1->x - ball_2->x) * (ball_1->x - ball_2->x) + (ball_1->y - ball_2->y) * (ball_1->y - ball_2->y));
-      if (distance_ball_1_ball_2 < 35.0) {
+      if (distance_ball_1_ball_2 < 25.0) {
           return 0.0;
       }
 
@@ -278,13 +278,13 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       float x_intercept = (slope * ball_1->x - ball_1->y - inversion * opp->x + opp->y) / (slope - inversion);
       float y_intercept = slope * (x_intercept - ball_1->x) + ball_1->y;
       float distance_pass = sqrt((ball_1->x - x_intercept) * (ball_1->x - x_intercept) + (ball_1->y - y_intercept) * (ball_1->y - y_intercept));
-      float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept)) - 3.0;
+      float distance_intercept = sqrt((opp->x - x_intercept) * (opp->x - x_intercept) + (opp->y - y_intercept) * (opp->y - y_intercept)) ;
 
 
 
 
       if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x) || (y_intercept < ball_1->y && y_intercept < ball_2->y) || (y_intercept > ball_1->y && y_intercept > ball_2->y)) {
-          return PI;
+          return PI/2.0;
       }
 
       float ABx = ball_1->x - ball_2->x;
@@ -489,30 +489,27 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
   internal void defend_team(Team* team1, Team* team2) {
   
       float current[6][6];
-      for (int i = 0; i < size_of_team; ++i) {
-          for (int j = 0; j < size_of_team; ++j) {
+      for (int i = 0; i < size_of_team+2; ++i) {
+          for (int j = 0; j < size_of_team+2; ++j) {
               current[i][j] = PI / 2.0;
           }
       }
 
 
+
+
       for (int i = 0; i < size_of_team; i++) {
-          float curr_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
-          float up_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
-          float right_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
-          float down_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
-          float left_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
-
-          curr_array[i] = 0.0;
-          up_array[i] = 0.0;
-          right_array[i] = 0.0;
-          left_array[i] = 0.0;
-          down_array[i] = 0.0;
-
+          
+          
           for (int j = 0; j < size_of_team + 2; j++) {
               for (int k = 0; k < size_of_team; k++) {
                   if (i != j) {
-                      curr_array[j] = min(how_too_close(team2->balls[i], team2->balls[j], team1->balls[k]), curr_array[j]);
+                      current[i][j] = min(how_too_close_2(team2->balls[i], team2->balls[j], team1->balls[k]), current[i][j]);
+
+                  }
+                  else {
+                  
+					  current[i][j] = 0.0;
 
                   }
               }
@@ -530,24 +527,24 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 		  float up_sum=0.0;
 		  float down_sum=0.0;
           
-          for (int k = 0; k < size_of_team + 2; k++) {
+          for (int k = 0; k < size_of_team; k++) {
               
-              for (int j = 0; j < size_of_team + 2; j++) {
+              for (int j = 0; j < size_of_team+2; j++) {
               
                   if (k != j) {
                   
-					  curr_sum+=  how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]);
+					  curr_sum+=  max(PI/13.0,min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]),current[j][k]));
 					  team1->balls[i]->x += check_radius_2; 
-					  right_sum+=  how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]);
+					  right_sum+=  max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]),current[j][k]));
 					  team1->balls[i]->x -= check_radius_2;
 					  team1->balls[i]->y += check_radius_2;
-					  up_sum +=  how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]);
+					  up_sum +=  max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]),current[j][k]));
 					  team1->balls[i]->y -= check_radius_2;
 					  team1->balls[i]->x -= check_radius_2;
-					  left_sum+=  how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]);
+					  left_sum+=  max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]),current[j][k]));
 					  team1->balls[i]->x += check_radius_2;
 					  team1->balls[i]->y -= check_radius_2;
-					  down_sum+=  how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]);
+					  down_sum+=  max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]),current[j][k]));
 					  team1->balls[i]->y += check_radius_2;
                   
                   
@@ -695,9 +692,11 @@ internal void simulate_game(Input* input, float dt) {
         simulate_ball_s(&ball_1, dt, arena_half_size_x, arena_half_size_y);
     }
 
+    check_connections(&team2, &team1);
     for (int i = 0; i < sizeof(all_balls) / sizeof(all_balls[0]); ++i) {
         u32 current_color = (i < sizeof(all_balls) / sizeof(all_balls[0]) / 2) ? color : color_2;
         draw_circle(current_color, all_balls[i]->x, all_balls[i]->y, all_balls[i]->radius);
+        draw_number(0x000000, all_balls[i]->x, all_balls[i]->y, 0.5, i);
     }
     
     /*
@@ -794,7 +793,7 @@ internal void simulate_game(Input* input, float dt) {
 
 
    //check_connections(&team1, &team2);
-    check_connections(&team2, &team1);
+  
 
     draw_rect(0x909000, -90, 0, 5, 17);
     draw_rect(0x909000, 90, 0, 5, 17);
