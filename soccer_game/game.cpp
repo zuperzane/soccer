@@ -43,7 +43,8 @@ Ball ball_9 = { 61, -2, bot_radius, 0, 0, 0, 0 ,1 };
 Ball post_1 = { -86, 16, bot_radius, 0, 0, 0, 0 ,1 };
 Ball post_2 = { -86, -16, bot_radius, 0, 0, 0, 0 ,1 };
 Ball post_3 = { 86, 16, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_4 = { 86, -16, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_4 = { 86, -16
++ bot_radius, 0, 0, 0, 0 ,1 };
 
 
 
@@ -83,6 +84,7 @@ internal void simulate_ball(Ball* ball, float dt, float arena_half_size_x, float
 }
 
 internal bool ball_hit() {
+    
 
 	float new_angle = atan2(ball_1.dp_y, ball_1.dp_x);
 
@@ -574,7 +576,10 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
           float current[6][6];
           for (int i = 0; i < size_of_team + 2; ++i) {
               for (int j = 0; j < size_of_team + 2; ++j) {
+                  for (int j = 0; j < size_of_team + 2; ++j) {
+
                   current[i][j] = PI / 2.0;
+}              
               }
           }
 
