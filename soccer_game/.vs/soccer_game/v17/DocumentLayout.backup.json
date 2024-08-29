@@ -1,37 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\",
+  "WorkspaceRootPath": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:soccer_game.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\win64_platform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\win64_platform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:win64_platform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\platform_unspecific.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:soccer_game.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\platform_unspecific.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:platform_unspecific.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\utils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\utils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:utils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.filters||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.filters||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:soccer_game.vcxproj.filters||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.user||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.user||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:soccer_game.vcxproj.user||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
@@ -46,49 +46,49 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "win64_platform.cpp",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\win64_platform.cpp",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\win64_platform.cpp",
               "RelativeDocumentMoniker": "win64_platform.cpp",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\win64_platform.cpp",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\win64_platform.cpp",
               "RelativeToolTip": "win64_platform.cpp",
-              "ViewState": "AgIAADsAAAAAAAAAAABYvYIAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAACAmZmZmZkuwIIAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T07:21:27.009Z"
+              "WhenOpened": "2024-08-24T07:21:27.009Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "renderer.cpp",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\renderer.cpp",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\renderer.cpp",
               "RelativeDocumentMoniker": "renderer.cpp",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\renderer.cpp",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\renderer.cpp",
               "RelativeToolTip": "renderer.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-24T07:33:20.062Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-24T07:33:20.062Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "game.cpp",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\game.cpp",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\game.cpp",
               "RelativeDocumentMoniker": "game.cpp",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\game.cpp",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\game.cpp",
               "RelativeToolTip": "game.cpp",
-              "ViewState": "AgIAAA0CAACAi5mZmZkVwBcCAAATAAAAAAAAAA==",
+              "ViewState": "AgIAABcCAAAAq5mZmZkNwDACAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-24T07:23:19.866Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "soccer_game.vcxproj",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj",
               "RelativeDocumentMoniker": "soccer_game.vcxproj",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj",
               "RelativeToolTip": "soccer_game.vcxproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
@@ -98,9 +98,9 @@
               "$type": "Document",
               "DocumentIndex": 5,
               "Title": "utils.cpp",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\utils.cpp",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\utils.cpp",
               "RelativeDocumentMoniker": "utils.cpp",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\utils.cpp",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\utils.cpp",
               "RelativeToolTip": "utils.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -110,9 +110,9 @@
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "soccer_game.vcxproj.filters",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.filters",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.filters",
               "RelativeDocumentMoniker": "soccer_game.vcxproj.filters",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.filters",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.filters",
               "RelativeToolTip": "soccer_game.vcxproj.filters",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
@@ -122,9 +122,9 @@
               "$type": "Document",
               "DocumentIndex": 7,
               "Title": "soccer_game.vcxproj.user",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.user",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.user",
               "RelativeDocumentMoniker": "soccer_game.vcxproj.user",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\soccer_game.vcxproj.user",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\soccer_game.vcxproj.user",
               "RelativeToolTip": "soccer_game.vcxproj.user",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003464|",
@@ -134,9 +134,9 @@
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "platform_unspecific.cpp",
-              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\platform_unspecific.cpp",
+              "DocumentMoniker": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\platform_unspecific.cpp",
               "RelativeDocumentMoniker": "platform_unspecific.cpp",
-              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccergame\\soccer\\soccer_game\\platform_unspecific.cpp",
+              "ToolTip": "C:\\Users\\Toshiba\\Desktop\\soccer_v1\\soccer\\soccer_game\\platform_unspecific.cpp",
               "RelativeToolTip": "platform_unspecific.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
