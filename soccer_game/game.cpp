@@ -28,8 +28,8 @@ int player_score_1 = 0;
 int predictedball_y = 0;
 
 float bot_radius = 3.0f;
-float check_radius = 8.0f;
-float check_radius_2 = 10.0f;
+float check_radius = 10.0f;
+float check_radius_2 = 6.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
 Ball ball_2 = { 20, 20, bot_radius, 0, 0, 0, 0,1 };
@@ -443,7 +443,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
   internal void attack_team(Team* team2, Team* team1) {
-      for (int i = 1; i < size_of_team; i++) {
+      for (int i = 0; i < size_of_team; i++) {
           float curr_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
           float up_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
           float right_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
@@ -573,12 +573,12 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-          float current[6][6];
+          float current[6][6][6];
           for (int i = 0; i < size_of_team + 2; ++i) {
               for (int j = 0; j < size_of_team + 2; ++j) {
-                  for (int j = 0; j < size_of_team + 2; ++j) {
+                  for (int z = 0; z < size_of_team + 2; ++z) {
 
-                  current[i][j] = PI / 2.0;
+                  current[i][j][z] = PI / 2.0;
 }              
               }
           }
@@ -586,18 +586,18 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-          for (int i = 0; i < size_of_team; i++) {
+          for (int i = 0; i < size_of_team+2; i++) {
 
 
-              for (int j = 0; j < size_of_team + 2; j++) {
+              for (int j = 0; j < size_of_team; j++) {
                   for (int k = 0; k < size_of_team; k++) {
                       if (i != j) {
-                          current[i][j] = min(how_too_close_2(team2->balls[i], team2->balls[j], team1->balls[k]), current[i][j]);
+                          current[i][j][k] = min(how_too_close_2(team2->balls[i], team2->balls[j], team1->balls[k]), current[i][j][k]);
 
                       }
                       else {
 
-                          current[i][j] = 0.0;
+                          current[i][j][k] = 0.0;
 
                       }
                   }
@@ -621,18 +621,25 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
                       if (k != j) {
 
-                          curr_sum += max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), current[j][k]));
+
+						  float curr_min_without_i = PI/2.0;
+						  for (int z = 0; z < size_of_team; z++) {
+							  if (z != i) {
+								  curr_min_without_i = min(curr_min_without_i, current[j][k][z]);
+							  }
+						  }
+                          curr_sum += max(PI / 32.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), curr_min_without_i));
                           team1->balls[i]->x += check_radius_2;
-                          right_sum += max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), current[j][k]));
+                          right_sum += max(PI / 32.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), curr_min_without_i));
                           team1->balls[i]->x -= check_radius_2;
                           team1->balls[i]->y += check_radius_2;
-                          up_sum += max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), current[j][k]));
+                          up_sum += max(PI / 32.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), curr_min_without_i));
                           team1->balls[i]->y -= check_radius_2;
                           team1->balls[i]->x -= check_radius_2;
-                          left_sum += max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), current[j][k]));
+                          left_sum += max(PI / 32.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), curr_min_without_i));
                           team1->balls[i]->x += check_radius_2;
                           team1->balls[i]->y -= check_radius_2;
-                          down_sum += max(PI / 13.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), current[j][k]));
+                          down_sum += max(PI / 32.0, min(how_too_close_2(team2->balls[j], team2->balls[k], team1->balls[i]), curr_min_without_i));
                           team1->balls[i]->y += check_radius_2;
 
 
