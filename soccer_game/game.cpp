@@ -2,6 +2,9 @@
 #define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
 #define released(b) (!input->buttons[b].is_down && input->buttons[b].changed)
 #include <cmath>
+#include <cstdlib>
+
+
 using namespace std;
 
 typedef struct {
@@ -28,7 +31,7 @@ int player_score_1 = 0;
 int predictedball_y = 0;
 
 float bot_radius = 3.0f;
-float check_radius = 10.0f;
+float check_radius = 15.0f;
 float check_radius_2 = 6.0f;
 
 Ball ball_1 = { 0, 0, 1, 12, 21, 0, 0 };
@@ -40,11 +43,10 @@ Ball ball_6 = { -20, 1, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_7 = { 21, 31, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_8 = { 20, -31, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_9 = { 61, -2, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_1 = { -86, 16, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_2 = { -86, -16, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_3 = { 86, 16, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_4 = { 86, -16
-+ bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_1 = { -86, 10, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_2 = { -86, -10, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_3 = { 86, 10, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_4 = { 86, -10, bot_radius, 0, 0, 0, 0 ,1 };
 
 
 
@@ -697,6 +699,12 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 internal void simulate_game(Input* input, float dt) {
     clear_screen(0x000000);
     draw_rect(0x009000, 0, 0, 85, 45);
+
+    
+
+    check_radius = abs(fmod(3000.0*dt*ball_5.x,10.0));
+	check_radius_2 = abs(fmod(3000.0*dt*ball_3.x , 10.0));
+
 
 
     float player_ddp_1 = 0.f;
