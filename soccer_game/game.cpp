@@ -348,9 +348,9 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-     // if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x) || (y_intercept < ball_1->y && y_intercept < ball_2->y) || (y_intercept > ball_1->y && y_intercept > ball_2->y)) {
-       //   return PI/2.0;
-      //}
+      if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x) || (y_intercept < ball_1->y && y_intercept < ball_2->y) || (y_intercept > ball_1->y && y_intercept > ball_2->y)) {
+          return PI/2.0;
+      }
 
       float ABx = ball_1->x - ball_2->x;
       float ABy = ball_1->y - ball_2->y;
@@ -711,8 +711,9 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 	  float angle = atan2(ball2->y - ball1->y, ball2->x - ball1->x);
 	  ball_1.x = ball1->x+4.0*cos(angle);
 	  ball_1.y = ball1->y + 4.0 * sin(angle);
-	  ball_1.dp_x = 80.0*cos(angle);
-	  ball_1.dp_y = 80.0 * sin(angle);
+	  float distance_ball_1_ball_2 = sqrt((ball1->x - ball2->x) * (ball1->x - ball2->x) + (ball1->y - ball2->y) * (ball1->y - ball2->y));
+	  ball_1.dp_x = min(120.0,(2.0*distance_ball_1_ball_2)) *cos(angle);
+	  ball_1.dp_y = min(120.0,(2.0 * distance_ball_1_ball_2)) * sin(angle);
   
   
   }
@@ -768,7 +769,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
               }
               else {
                   is_hit = false;
-                  if (who_attacking == 2) {
+                  if (who_attacking == 1) {
 
                       pass_to_2 = i%4;
                   }
@@ -786,14 +787,57 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
           defend_team(&team2, &team1, 0);
           if (is_hit&&who_has_ball==-1) {
               frozen = -1;
-              for (int i = 1; i < size_of_team * 2; i++) {
-                                  
-                  float right = ball_1.x - all_balls[i]->x;
-                  float up = ball_1.y - all_balls[i]->y;
-                  float hypotenuse = sqrt(right*right+up*up);
-                  all_balls[i]->ddp_y =300.0* up / hypotenuse;
-                  all_balls[i]->ddp_x = 300.0*right / hypotenuse;
+              
+              int team_1=0;
+              float min_dis_1 = 100.0;
+              int team_2=0;
+              float min_dis_2 = 100.0;
+
+              float right;
+			  float up;
+			  float hypotenuse;
+
+              for (int i = 0; i < size_of_team; i++) {
+                  right = ball_1.x - all_balls[i]->x;
+                  up = ball_1.y - all_balls[i]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  if(hypotenuse<min_dis_1)
+				  {
+					  min_dis_1 = hypotenuse;
+					  team_1 = i;
+				  }
+                  right = ball_1.x - all_balls[i+4]->x;
+                  up = ball_1.y - all_balls[i+4]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  if (hypotenuse < min_dis_2)
+                  {
+                      min_dis_2 = hypotenuse;
+                      team_2 = i+4;
+                  }
+
+
               }
+                  
+
+
+              
+
+              if (team_1 != 0) {
+
+                  right = ball_1.x - all_balls[team_1]->x;
+                  up = ball_1.y - all_balls[team_1]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  all_balls[team_1]->ddp_y = 300.0 * up / hypotenuse;
+                  all_balls[team_1]->ddp_x = 300.0 * right / hypotenuse;
+              }
+
+                  right = ball_1.x - all_balls[team_2]->x;
+                  up = ball_1.y - all_balls[team_2]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  all_balls[team_2]->ddp_y = 300.0 * up / hypotenuse;
+                  all_balls[team_2]->ddp_x = 300.0 * right / hypotenuse;
+
+
 
           }
 
@@ -819,36 +863,97 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       }
       else {
 
+          attack_team(&team2, &team1, 0);
+          defend_team(&team1, &team2, 1);
           if (is_hit && who_has_ball == -1) {
 
-              for (int i = 1; i < size_of_team * 2; i++) {
+              int team_1 = 0;
+              float min_dis_1 = 100.0;
+              int team_2 = 0;
+              float min_dis_2 = 100.0;
 
-                  float right = ball_1.x - all_balls[i]->x;
-                  float up = ball_1.y - all_balls[i]->y;
-                  float hypotenuse = sqrt(right * right + up * up);
-                  all_balls[i]->ddp_y = 300.0 * up / hypotenuse;
-                  all_balls[i]->ddp_x = 300.0 * right / hypotenuse;
+              float right;
+              float up;
+              float hypotenuse;
+
+              for (int i = 0; i < size_of_team; i++) {
+                  right = ball_1.x - all_balls[i]->x;
+                  up = ball_1.y - all_balls[i]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  if (hypotenuse < min_dis_1)
+                  {
+                      min_dis_1 = hypotenuse;
+                      team_1 = i;
+                  }
+                  right = ball_1.x - all_balls[i + 4]->x;
+                  up = ball_1.y - all_balls[i + 4]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  if (hypotenuse < min_dis_2)
+                  {
+                      min_dis_2 = hypotenuse;
+                      team_2 = i + 4;
+                  }
+
+
               }
 
+
+
+
+
+              if (team_1 != 0) {
+
+                  right = ball_1.x - all_balls[team_1]->x;
+                  up = ball_1.y - all_balls[team_1]->y;
+                  hypotenuse = sqrt(right * right + up * up);
+                  all_balls[team_1]->ddp_y = 300.0 * up / hypotenuse;
+                  all_balls[team_1]->ddp_x = 300.0 * right / hypotenuse;
+              }
+
+              right = ball_1.x - all_balls[team_2]->x;
+              up = ball_1.y - all_balls[team_2]->y;
+              hypotenuse = sqrt(right * right + up * up);
+              all_balls[team_2]->ddp_y = 300.0 * up / hypotenuse;
+              all_balls[team_2]->ddp_x = 300.0 * right / hypotenuse;
+
+
+
           }
-		  float min_angle = PI;
+		   
           
-          
+
+          float min_angle[6] = { PI, PI , PI, PI , PI , PI  };
+          float max_angle=0.0;
           
           if (who_has_ball != -1) {
               pass_to_2 = who_has_ball % 4;
               for (int i = 0; i < size_of_team + 2; i++) {
 
                   for (int k = 0; k < size_of_team; k++) {
-                      if (i != k) {
-                          if (how_too_close_2(team2.balls[i], team2.balls[who_has_ball % 4], team1.balls[pass_to_2]) < min_angle) {
-
+                      if (i != who_has_ball%4) {
+                          if (how_too_close_2(team2.balls[i], team2.balls[who_has_ball % 4], team1.balls[k]) < min_angle[i]) {
+                              
+                              min_angle[i] = how_too_close_2(team2.balls[i], team2.balls[who_has_ball % 4], team1.balls[k]);
                           }
                       }
 
 
                   }
 
+              }
+
+              for (int i = 0; i < size_of_team+2; i++) {
+              
+                  if (i != who_has_ball % 4) {
+                  
+                      if (min_angle[i]>PI/6.0&&min_angle[i] >max_angle) {
+                          pass_to_2 = i;
+                          max_angle = min_angle[i];
+
+                      }
+                  
+                  }
+              
               }
 
           }
@@ -870,16 +975,15 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
               }
           
-          team2.balls[pass_to_2]->dp_x = 0;
+
+
+              team2.balls[pass_to_2]->dp_x = 0;
           team2.balls[pass_to_2]->dp_y = 0;
-          check_connections(&team1, &team2);
+        
 
 
 
 
-
-          attack_team(&team2, &team1, 0);
-          defend_team(&team1, &team2, 1);
           
           
           check_connections(&team2, &team1);
