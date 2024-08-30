@@ -137,7 +137,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
     internal boolean circle_vs_circle_hold(Ball* ball1, Ball* ball2) {
         return ((ball1->x - ball2->x) * (ball1->x - ball2->x) +
             (ball1->y - ball2->y) * (ball1->y - ball2->y) <
-            (ball1->radius + ball2->radius+0.7) * (ball1->radius + ball2->radius+0.7));
+            (ball1->radius + ball2->radius+0.3) * (ball1->radius + ball2->radius+0.3));
     }
 
     internal void final_speed(Ball * ball1, Ball * ball2, float* final_px, float* final_py) {
@@ -717,7 +717,17 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
   
   
   }
+  void shoot_ball(Ball* ball1, Ball* ball2) {
 
+      float angle = atan2(ball2->y - ball1->y, ball2->x - ball1->x);
+      ball_1.x = ball1->x + 4.0 * cos(angle);
+      ball_1.y = ball1->y + 4.0 * sin(angle);
+      float distance_ball_1_ball_2 = sqrt((ball1->x - ball2->x) * (ball1->x - ball2->x) + (ball1->y - ball2->y) * (ball1->y - ball2->y));
+      ball_1.dp_x =  120.0 * cos(angle);
+      ball_1.dp_y = 120.0* sin(angle);
+
+
+  }
 
   int pass_to=0;
   int pass_to_2 = 4;
@@ -754,14 +764,17 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
           pass_to = 5;
       }
 	  who_has_ball = -1;
+      bool new_team = false;
       for (int i = 0; i < size_of_team * 2; i++) {
+
+		 
 
           if (circle_vs_circle_hold(all_balls[i], &ball_1)) {
               who_has_ball = i;
 
               if (i < 4) {
                   if (who_attacking == 2) {
-                  
+                      new_team = true;
                       pass_to = i;
                   }
                   who_attacking = 1;
@@ -770,7 +783,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
               else {
                   is_hit = false;
                   if (who_attacking == 1) {
-
+                      new_team = true;
                       pass_to_2 = i%4;
                   }
                   who_attacking = 2;
@@ -842,7 +855,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
           }
 
 
-          if (who_has_ball == pass_to) {
+          if (who_has_ball == pass_to&&new_team==false) {
 
               ball_1.dp_x = 0;
               ball_1.dp_y = 0;
@@ -850,10 +863,17 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
               all_balls[who_has_ball]->dp_y = 0;
               all_balls[who_has_ball]->ddp_x = 0;
               all_balls[who_has_ball]->ddp_y = 0;
-          } else if(who_has_ball!=-1){
+          } else if(who_has_ball!=-1 && new_team == false){
 			  
-				  pass_ball(all_balls[who_has_ball], team1.balls[pass_to]);
-				
+
+              if (pass_to < 4) {
+                  pass_ball(all_balls[who_has_ball], team1.balls[pass_to]);
+              }
+              else
+              {
+				  shoot_ball(all_balls[who_has_ball], team1.balls[pass_to]);
+
+              }
           
           
           }
@@ -958,7 +978,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
           }
 
-              if (who_has_ball % 4 == pass_to_2) {
+              if (who_has_ball % 4 == pass_to_2 && new_team == false) {
 
                   ball_1.dp_x = 0;
                   ball_1.dp_y = 0;
@@ -967,10 +987,14 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
                   all_balls[who_has_ball]->ddp_x = 0;
                   all_balls[who_has_ball]->ddp_y = 0;
               }
-              else if (who_has_ball != -1) {
+              else if (who_has_ball != -1 && new_team == false) {
 
-                  pass_ball(all_balls[who_has_ball], team2.balls[pass_to_2]);
-
+                  if (pass_to_2 < 4) {
+                      pass_ball(all_balls[who_has_ball], team2.balls[pass_to_2]);
+                  }
+                  else {
+					  shoot_ball(all_balls[who_has_ball], team2.balls[pass_to_2]);
+                  }
 
 
               }
@@ -1121,7 +1145,7 @@ internal void simulate_game(Input* input, float dt) {
     for (int i = 0; i < sizeof(all_balls) / sizeof(all_balls[0]); ++i) {
         u32 current_color = (i < sizeof(all_balls) / sizeof(all_balls[0]) / 2) ? color : color_2;
         draw_circle(current_color, all_balls[i]->x, all_balls[i]->y, all_balls[i]->radius);
-        draw_number(0x000000, all_balls[i]->x, all_balls[i]->y, 0.5, i);
+        draw_number(0x000000, all_balls[i]->x, all_balls[i]->y, 0.5, i+1);
     }
     
     /*
