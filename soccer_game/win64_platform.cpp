@@ -132,7 +132,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR  lpCmdLine,  int
 					process_button(BUTTON_F, 'F');
 					process_button(BUTTON_G, 'G');
 					process_button(BUTTON_H, 'H');
-				
+					process_button(BUTTON_Z, 'Z');
+					process_button(BUTTON_X, 'X');
+					process_button(BUTTON_C, 'C');
+					process_button(BUTTON_V, 'V');
+					process_button(BUTTON_B, 'B');
+					process_button(BUTTON_N, 'N');
 				
 				}
 

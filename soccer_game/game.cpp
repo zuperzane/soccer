@@ -43,10 +43,10 @@ Ball ball_6 = { -20, 1, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_7 = { 21, 31, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_8 = { 20, -31, bot_radius, 0, 0, 0, 0,1 };
 Ball ball_9 = { 61, -2, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_1 = { -86, 10, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_2 = { -86, -10, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_3 = { 86, 10, bot_radius, 0, 0, 0, 0 ,1 };
-Ball post_4 = { 86, -10, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_1 = { -90, 12, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_2 = { -90, -12, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_3 = { 90, 12, bot_radius, 0, 0, 0, 0 ,1 };
+Ball post_4 = { 90, -12, bot_radius, 0, 0, 0, 0 ,1 };
 
 
 
@@ -57,8 +57,11 @@ Ball* all_balls[] = { &ball_2, &ball_3, &ball_4, &ball_5, &ball_6, &ball_7, &bal
 bool catch_ball_1 = false;
 //functions hitting stuff like that
 int size_of_team=4;
-int who_has_ball = -1;
 
+
+int who_has_ball = -1;
+int who_supposed_ball=-1;
+bool passing = false;
 int who_attacking=1;
 
 float ball_angle = atan2(ball_1.dp_y, ball_1.dp_x);
@@ -92,7 +95,13 @@ internal bool ball_hit() {
 
     if (abs(new_angle - ball_angle)>0.3) {
         ball_angle = new_angle;
-        return true;
+        
+        float ball_1_speed = sqrt((ball_1.dp_x) * ball_1.dp_x + (ball_1.dp_y) * ball_1.dp_y);
+        
+        if (ball_1_speed>0.01) { 
+            return true; 
+        
+        }
     }
 
    
@@ -100,7 +109,7 @@ internal bool ball_hit() {
 };
 
 internal void simulate_player_s(float* p, float* dp, float ddp, float dt, float arena_half_size, float radius) {
-    ddp -= *dp * 0.9;
+    ddp -= *dp * 0.4;
     *p = *p + *dp * dt + ddp * dt * dt * 0.5f;
     *dp = *dp + ddp * dt;
 
@@ -128,7 +137,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
     internal boolean circle_vs_circle_hold(Ball* ball1, Ball* ball2) {
         return ((ball1->x - ball2->x) * (ball1->x - ball2->x) +
             (ball1->y - ball2->y) * (ball1->y - ball2->y) <
-            (ball1->radius + ball2->radius+15.0) * (ball1->radius + ball2->radius+15.0));
+            (ball1->radius + ball2->radius+0.7) * (ball1->radius + ball2->radius+0.7));
     }
 
     internal void final_speed(Ball * ball1, Ball * ball2, float* final_px, float* final_py) {
@@ -221,20 +230,19 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 		  float time = dis_ball_1_intercept / speed_ball_1;
 
 
-          if (time > 0.4||dis_ball_2_intercept>0.4) {
+          if ((time<1.0 &&time > 0.05)&&dis_ball_2_intercept>1.0) {
 
-          
-          ball_2->dp_x = (4.0 * (x_intercept - ball_2->x));
-          ball_2->dp_y = (4.0 * (y_intercept - ball_2->y));
-          ball_2->ddp_x = 0.0;
-          ball_2->ddp_y = 0.0;
+              float right = x_intercept - ball_2->x;
+			  float up = y_intercept - ball_2->y;
+			  float hypotenuse = sqrt((right) * (right)+(up) * (up));
+              if (hypotenuse >= 0.001) {
+                  ball_2->ddp_x = 300.0 * right / hypotenuse;
+				  ball_2->ddp_y = 300.0 * up / hypotenuse;
+              }
       }
       else {
-      
-		  ball_2->dp_x = ball_1->dp_x/2.0;
-		  ball_2->dp_y = ball_1->dp_y/2.0;
-		  ball_2->ddp_x = 0.0;
-		  ball_2->ddp_y = 0.0;
+  //      ball_2->ddp_x = 0.0;
+	//	  ball_2->ddp_y = 0.0;
 
       
       
@@ -340,9 +348,9 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-      if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x) || (y_intercept < ball_1->y && y_intercept < ball_2->y) || (y_intercept > ball_1->y && y_intercept > ball_2->y)) {
-          return PI/2.0;
-      }
+     // if ((x_intercept < ball_1->x && x_intercept < ball_2->x) || (x_intercept > ball_1->x && x_intercept > ball_2->x) || (y_intercept < ball_1->y && y_intercept < ball_2->y) || (y_intercept > ball_1->y && y_intercept > ball_2->y)) {
+       //   return PI/2.0;
+      //}
 
       float ABx = ball_1->x - ball_2->x;
       float ABy = ball_1->y - ball_2->y;
@@ -444,8 +452,8 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-  internal void attack_team(Team* team2, Team* team1) {
-      for (int i = 0; i < size_of_team; i++) {
+  internal void attack_team(Team* team2, Team* team1,int player) {
+      for (int i = player; i < size_of_team; i++) {
           float curr_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
           float up_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
           float right_array[6] = { PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0, PI / 2.0 };
@@ -543,7 +551,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
   }
 
   
-  internal void defend_team(Team* team1, Team* team2) {
+  internal void defend_team(Team* team1, Team* team2, int player) {
   
 
       float slope;
@@ -562,12 +570,11 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-      if (y_intercept<17&&y_intercept>-17&&ball_1.dp_x>0) {
+      if (y_intercept<30&&y_intercept>-30&&ball_1.dp_x>0) {
           for (int i = 0;i<size_of_team; i++) {
-              if (circle_vs_circle_hold(team1->balls[i], &ball_1)) {
-
+              
                   catch_ball_2(&ball_1,team1->balls[i]);
-              }
+              
           }
       
       }
@@ -609,7 +616,7 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
 
 
 
-          for (int i = 0; i < size_of_team; i++) {
+          for (int i = player; i < size_of_team; i++) {
 
               float curr_sum = 0.0;
               float left_sum = 0.0;
@@ -694,7 +701,202 @@ internal void simulate_ball_s(Ball* ball, float dt, float arena_half_size_x, flo
       }
      
   }
+  //int who_has_ball = -1;
+  //int who_supposed_ball = -1;
+  //bool passing = false;
+  //int who_attacking = 1;
+
+  void pass_ball(Ball* ball1, Ball* ball2 ) {
   
+	  float angle = atan2(ball2->y - ball1->y, ball2->x - ball1->x);
+	  ball_1.x = ball1->x+4.0*cos(angle);
+	  ball_1.y = ball1->y + 4.0 * sin(angle);
+	  ball_1.dp_x = 80.0*cos(angle);
+	  ball_1.dp_y = 80.0 * sin(angle);
+  
+  
+  }
+
+
+  int pass_to=0;
+  int pass_to_2 = 4;
+
+  bool is_hit=false;
+  int frozen = -1;
+  int passed_to=0;
+  internal void what_happening_game(Input* input) {
+  
+	  bool new_person = false;
+      if (ball_hit()==true) {
+          is_hit = true;
+      }
+      if (is_down(BUTTON_Z)) {
+      
+          pass_to = 0;
+      }
+	  if (is_down(BUTTON_X)) {
+
+		  pass_to = 1;
+	  }
+	  if (is_down(BUTTON_C)) {
+
+		  pass_to = 2;
+	  }
+	  if (is_down(BUTTON_V)) {
+
+		  pass_to = 3;
+	  }
+      if (is_down(BUTTON_B)) {
+          pass_to = 4;
+      }
+      if (is_down(BUTTON_N)) {
+          pass_to = 5;
+      }
+	  who_has_ball = -1;
+      for (int i = 0; i < size_of_team * 2; i++) {
+
+          if (circle_vs_circle_hold(all_balls[i], &ball_1)) {
+              who_has_ball = i;
+
+              if (i < 4) {
+                  if (who_attacking == 2) {
+                  
+                      pass_to = i;
+                  }
+                  who_attacking = 1;
+                  is_hit = false;
+              }
+              else {
+                  is_hit = false;
+                  if (who_attacking == 2) {
+
+                      pass_to_2 = i%4;
+                  }
+                  who_attacking = 2;
+                
+              }
+
+
+          }
+      }
+
+      if (who_attacking == 1) {
+
+          attack_team(&team1, &team2, 1);
+          defend_team(&team2, &team1, 0);
+          if (is_hit&&who_has_ball==-1) {
+              frozen = -1;
+              for (int i = 1; i < size_of_team * 2; i++) {
+                                  
+                  float right = ball_1.x - all_balls[i]->x;
+                  float up = ball_1.y - all_balls[i]->y;
+                  float hypotenuse = sqrt(right*right+up*up);
+                  all_balls[i]->ddp_y =300.0* up / hypotenuse;
+                  all_balls[i]->ddp_x = 300.0*right / hypotenuse;
+              }
+
+          }
+
+
+          if (who_has_ball == pass_to) {
+
+              ball_1.dp_x = 0;
+              ball_1.dp_y = 0;
+              all_balls[who_has_ball]->dp_x = 0;
+              all_balls[who_has_ball]->dp_y = 0;
+              all_balls[who_has_ball]->ddp_x = 0;
+              all_balls[who_has_ball]->ddp_y = 0;
+          } else if(who_has_ball!=-1){
+			  
+				  pass_ball(all_balls[who_has_ball], team1.balls[pass_to]);
+				
+          
+          
+          }
+          team1.balls[pass_to]->dp_x = 0;
+          team1.balls[pass_to]->dp_y = 0;
+          check_connections(&team1, &team2);
+      }
+      else {
+
+          if (is_hit && who_has_ball == -1) {
+
+              for (int i = 1; i < size_of_team * 2; i++) {
+
+                  float right = ball_1.x - all_balls[i]->x;
+                  float up = ball_1.y - all_balls[i]->y;
+                  float hypotenuse = sqrt(right * right + up * up);
+                  all_balls[i]->ddp_y = 300.0 * up / hypotenuse;
+                  all_balls[i]->ddp_x = 300.0 * right / hypotenuse;
+              }
+
+          }
+		  float min_angle = PI;
+          
+          
+          
+          if (who_has_ball != -1) {
+              pass_to_2 = who_has_ball % 4;
+              for (int i = 0; i < size_of_team + 2; i++) {
+
+                  for (int k = 0; k < size_of_team; k++) {
+                      if (i != k) {
+                          if (how_too_close_2(team2.balls[i], team2.balls[who_has_ball % 4], team1.balls[pass_to_2]) < min_angle) {
+
+                          }
+                      }
+
+
+                  }
+
+              }
+
+          }
+
+              if (who_has_ball % 4 == pass_to_2) {
+
+                  ball_1.dp_x = 0;
+                  ball_1.dp_y = 0;
+                  all_balls[who_has_ball]->dp_x = 0;
+                  all_balls[who_has_ball]->dp_y = 0;
+                  all_balls[who_has_ball]->ddp_x = 0;
+                  all_balls[who_has_ball]->ddp_y = 0;
+              }
+              else if (who_has_ball != -1) {
+
+                  pass_ball(all_balls[who_has_ball], team2.balls[pass_to_2]);
+
+
+
+              }
+          
+          team2.balls[pass_to_2]->dp_x = 0;
+          team2.balls[pass_to_2]->dp_y = 0;
+          check_connections(&team1, &team2);
+
+
+
+
+
+          attack_team(&team2, &team1, 0);
+          defend_team(&team1, &team2, 1);
+          
+          
+          check_connections(&team2, &team1);
+          
+      }
+
+      if (who_has_ball != who_supposed_ball) {
+
+          new_person = true;
+
+      }
+
+
+  
+  
+  
+  };
 
 internal void simulate_game(Input* input, float dt) {
     clear_screen(0x000000);
@@ -732,22 +934,22 @@ internal void simulate_game(Input* input, float dt) {
 
     //controls
     {
-        if (is_down(BUTTON_UP)) ball_2.ddp_y += 500.4;
-        if (is_down(BUTTON_DOWN)) ball_2.ddp_y -= 500.4;
-        if (is_down(BUTTON_RIGHT)) ball_2.ddp_x += 500.4;
-        if (is_down(BUTTON_LEFT)) ball_2.ddp_x -= 500.4;
-        if (is_down(BUTTON_W)) ball_3.ddp_y += 500.4;
-        if (is_down(BUTTON_S)) ball_3.ddp_y -= 500.4;
-        if (is_down(BUTTON_D)) ball_3.ddp_x += 500.4;
-        if (is_down(BUTTON_A)) ball_3.ddp_x -= 500.4;
-        if (is_down(BUTTON_I)) ball_4.ddp_y += 500.4;
-        if (is_down(BUTTON_K)) ball_4.ddp_y -= 500.4;
-        if (is_down(BUTTON_L)) ball_4.ddp_x += 500.4;
-        if (is_down(BUTTON_J)) ball_4.ddp_x -= 500.4;
-        if (is_down(BUTTON_T)) ball_5.ddp_y += 500.4;
-        if (is_down(BUTTON_G)) ball_5.ddp_y -= 500.4;
-        if (is_down(BUTTON_H)) ball_5.ddp_x += 500.4;
-        if (is_down(BUTTON_F)) ball_5.ddp_x -= 500.4;
+        if (is_down(BUTTON_UP)) ball_2.ddp_y += 300.0;
+        if (is_down(BUTTON_DOWN)) ball_2.ddp_y -= 300.0;
+        if (is_down(BUTTON_RIGHT)) ball_2.ddp_x += 300.0;
+        if (is_down(BUTTON_LEFT)) ball_2.ddp_x -= 300.0;
+        if (is_down(BUTTON_W)) ball_3.ddp_y += 300.0;
+        if (is_down(BUTTON_S)) ball_3.ddp_y -= 300.0;
+        if (is_down(BUTTON_D)) ball_3.ddp_x += 300.0;
+        if (is_down(BUTTON_A)) ball_3.ddp_x -= 300.0;
+        if (is_down(BUTTON_I)) ball_4.ddp_y += 300.0;
+        if (is_down(BUTTON_K)) ball_4.ddp_y -= 300.0;
+        if (is_down(BUTTON_L)) ball_4.ddp_x += 300.0;
+        if (is_down(BUTTON_J)) ball_4.ddp_x -= 300.0;
+        if (is_down(BUTTON_T)) ball_5.ddp_y += 300.0;
+        if (is_down(BUTTON_G)) ball_5.ddp_y -= 300.0;
+        if (is_down(BUTTON_H)) ball_5.ddp_x += 300.0;
+        if (is_down(BUTTON_F)) ball_5.ddp_x -= 300.0;
     }
 	
 
@@ -762,9 +964,8 @@ internal void simulate_game(Input* input, float dt) {
     u32 color = 0x00ffff;
     u32 color_2 = 0xff0000;
     
-    
-attack_team(&team1, &team2);
-	defend_team(&team2, &team1);
+    what_happening_game(input);
+
 
     /*
     if (circle_vs_circle_hold(&ball_1, &ball_2)) {
@@ -812,7 +1013,7 @@ attack_team(&team1, &team2);
         simulate_ball_s(&ball_1, dt, arena_half_size_x, arena_half_size_y);
     }
 
-    check_connections(&team1, &team2);
+    
     for (int i = 0; i < sizeof(all_balls) / sizeof(all_balls[0]); ++i) {
         u32 current_color = (i < sizeof(all_balls) / sizeof(all_balls[0]) / 2) ? color : color_2;
         draw_circle(current_color, all_balls[i]->x, all_balls[i]->y, all_balls[i]->radius);

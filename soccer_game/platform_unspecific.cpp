@@ -21,7 +21,15 @@ enum {
 	BUTTON_F,
 	BUTTON_G,
 	BUTTON_H,
+	BUTTON_Z,
+	BUTTON_X,
+	BUTTON_C,
+	BUTTON_V,
+	BUTTON_B,
+	BUTTON_N,
 	BUTTON_COUNT,
+	
+
 
 };
 
